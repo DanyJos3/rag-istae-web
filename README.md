@@ -7,22 +7,38 @@ Aplicada (UIDE), Grupo 3.
 
 ## Qué hace
 
-- Inicio de sesión de estudiantes, docentes y administradores.
-- Chat de consulta normativa con respuestas citadas: cada afirmación lleva el
-  identificador del artículo y la sección «Fuentes» agrupa las citas por
-  documento con su nombre oficial.
-- Panel de documentos (consulta del catálogo; la subida de normas es la
-  segunda etapa).
+- Chat de consulta normativa con la respuesta mostrada a medida que llega.
+- Citas numeradas dentro del texto: al hacer clic se abre el artículo completo
+  tal como figura en la norma.
+- Panel plegable «Fuentes legales» con una tarjeta por artículo citado, la cita
+  textual y si se verificó contra la norma.
+- Botón «Nuevo chat» para empezar una conversación sin el contexto anterior.
+
+Pendiente: inicio de sesión e historial de chats por usuario.
 
 La interfaz no contiene lógica de recuperación ni de generación: consume la API
 del backend (`rag-istae-api`), que expone la arquitectura elegida en la
 evaluación (contexto largo o RAG) detrás del mismo endpoint.
 
+## Estructura
+
+```
+src/
+  app/                    página, layout e ícono
+  components/chat/        pantalla de chat: mensajes, citas, fuentes y artículo
+  components/layout/      barra lateral y logo del ISTAE
+  hooks/useChat.ts        estado del chat
+  lib/api.ts              llamadas al backend (POST /chat, GET /units/{id})
+  lib/citations.ts        numeración de citas
+  lib/types.ts            tipos del contrato con el backend
+```
+
 ## Tecnologías
 
 - Next.js 16 (App Router) con TypeScript
-- Tailwind CSS 4
-- Despliegue previsto: Vercel (plan Hobby)
+- Tailwind CSS 4 (con @tailwindcss/typography)
+- react-markdown, eventsource-parser, SWR, lucide-react
+- Despliegue: Vercel (plan Hobby)
 
 ## Desarrollo local
 
@@ -35,9 +51,8 @@ npm run dev
 
 Abra http://localhost:3000.
 
-Las variables de entorno (URL del backend, claves públicas del servicio de
-autenticación) irán en `.env.local`, que no se sube al repositorio. El archivo
-`.env.example` documenta cuáles son.
+Variable de entorno: `NEXT_PUBLIC_API_URL`, la URL del backend (por defecto
+http://localhost:8000). Ver `.env.example`.
 
 ## Repositorios relacionados
 
