@@ -48,6 +48,35 @@ export type UnitDetail = {
   text: string;
 };
 
+/** GET /architectures: una arquitectura que se puede elegir en el chat. */
+export type ArchitectureOption = {
+  id: string;
+  name: string;
+  description: string;
+  available: boolean;
+};
+
+/** Arquitectura con la que empieza cada chat nuevo. */
+export const DEFAULT_ARCHITECTURE = "A";
+
+/** GET /documents: una norma con la que trabaja el sistema. */
+export type DocumentSummary = {
+  document_id: string;
+  name: string;
+  doc_type: "Interno" | "Externo" | string;
+  issuer: string;
+  /** Área temática (p. ej. "Prácticas preprofesionales"). */
+  domain: string;
+  /** 1 = mayor jerarquía. */
+  rank: number;
+  rank_label: string;
+  source_file: string;
+  /** Artículos detectados (0 si la norma se organiza por secciones). */
+  articles: number;
+  /** Unidades citables: artículos, secciones, disposiciones y preámbulo. */
+  units: number;
+};
+
 /** Mensaje tal como se muestra en pantalla. */
 export type ChatMessage = {
   id: string;

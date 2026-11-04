@@ -1,50 +1,46 @@
 "use client";
 
-import { SquarePen } from "lucide-react";
-
-import { BrandLogo } from "@/components/layout/BrandLogo";
-import { Sidebar } from "@/components/layout/Sidebar";
+import { AppShell } from "@/components/layout/AppShell";
 import { useChat } from "@/hooks/useChat";
+import type { StoredChat } from "@/lib/chatStorage";
 
+import { ArchitectureSelect } from "./ArchitectureSelect";
 import { ChatInput } from "./ChatInput";
 import { MessageList } from "./MessageList";
 import { WelcomeMessage } from "./WelcomeMessage";
 
+type ChatScreenProps = {
+  /** Chat guardado para continuarlo; sin él, la pantalla empieza un chat nuevo. */
+  savedChat?: StoredChat;
+};
+
 /** Pantalla de chat: une el estado (useChat) con las piezas visuales. */
-export function ChatScreen() {
-  const { messages, isLoading, sendMessage, startNewChat } = useChat();
+export function ChatScreen({ savedChat }: ChatScreenProps) {
+  const { messages, isLoading, sendMessage, architecture, chooseArchitecture, isArchitectureLocked } = useChat(savedChat);
   const isEmpty = messages.length === 0;
 
+  const chatInput = (
+    <ChatInput
+      onSend={sendMessage}
+      disabled={isLoading}
+      toolbar={<ArchitectureSelect value={architecture} onChange={chooseArchitecture} locked={isArchitectureLocked} />}
+    />
+  );
+
   return (
-    <div className="flex h-dvh bg-white dark:bg-zinc-950">
-      <Sidebar onNewChat={startNewChat} disabled={isLoading} />
-
-      <div className="flex min-w-0 flex-1 flex-col">
-        {/* En celulares no hay barra lateral: logo y "Nuevo chat" van arriba. */}
-        <header className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 md:hidden dark:border-zinc-800">
-          <BrandLogo />
-          <button type="button" onClick={startNewChat} disabled={isLoading} aria-label="Nuevo chat" className="p-2 disabled:opacity-50">
-            <SquarePen size={20} />
-          </button>
-        </header>
-
-        {isEmpty ? (
-          <WelcomeMessage onPickQuestion={sendMessage}>
-            <ChatInput onSend={sendMessage} disabled={isLoading} />
-          </WelcomeMessage>
-        ) : (
-          <>
-            <main className="flex-1 overflow-y-auto">
-              <MessageList messages={messages} />
-            </main>
-            <div className="px-4 pb-4">
-              <div className="mx-auto max-w-3xl">
-                <ChatInput onSend={sendMessage} disabled={isLoading} />
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+    <AppShell>
+      {isEmpty ? (
+        <WelcomeMessage onPickQuestion={sendMessage}>{chatInput}</WelcomeMessage>
+      ) : (
+        <>
+          <main className="flex-1 overflow-y-auto">
+            <MessageList messages={messages} />
+          </main>
+          <div className="px-4 pb-4">
+            <div className="mx-auto max-w-3xl">{chatInput}</div>
+          </div>
+        </>
+      )}
+    </AppShell>
   );
 }

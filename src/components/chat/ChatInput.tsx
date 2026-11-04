@@ -1,14 +1,16 @@
 "use client";
 
 import { ArrowUp } from "lucide-react";
-import { useState, type FormEvent, type KeyboardEvent } from "react";
+import { useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 
 type ChatInputProps = {
   onSend: (question: string) => void;
   disabled: boolean;
+  /** Controles que van abajo a la izquierda (el selector de arquitectura). */
+  toolbar?: ReactNode;
 };
 
-export function ChatInput({ onSend, disabled }: ChatInputProps) {
+export function ChatInput({ onSend, disabled, toolbar }: ChatInputProps) {
   const [question, setQuestion] = useState("");
   const canSend = !disabled && question.trim() !== "";
 
@@ -45,7 +47,8 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         maxLength={2000}
         className="max-h-40 w-full resize-none bg-transparent px-1 text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
       />
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between gap-2">
+        <div>{toolbar}</div>
         <button
           type="submit"
           disabled={!canSend}
