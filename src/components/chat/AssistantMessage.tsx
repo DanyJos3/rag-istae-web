@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -9,7 +10,9 @@ import type { ChatMessage } from "@/lib/types";
 
 import { ArticleModal } from "./ArticleModal";
 import { CitationBadge } from "./CitationBadge";
+import { CopyButton } from "./CopyButton";
 import { SourcesPanel } from "./SourcesPanel";
+import { ThinkingIndicator } from "./ThinkingIndicator";
 
 type AssistantMessageProps = {
   message: ChatMessage;
@@ -45,34 +48,41 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
     },
   };
 
-  if (isStreaming && text === "") {
-    return (
-      <p className="animate-pulse text-sm text-zinc-500">
-        Consultando la normativa… la respuesta puede tardar entre 1 y 3 minutos.
-      </p>
-    );
-  }
-
   return (
-    <div className="space-y-4">
-      <div className="prose prose-zinc max-w-none dark:prose-invert">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-          {linkCitations(text, citationNumbers)}
-        </ReactMarkdown>
+    <div className="flex gap-3">
+      {/* Avatar del asistente: el escudo del ISTAE */}
+      <div className="mt-0.5 h-8 w-8 shrink-0 rounded-lg bg-white p-0.5 shadow-sm ring-1 ring-border">
+        <Image src="/logo-istae.jpg" alt="" width={28} height={29} className="object-contain" />
       </div>
 
-      {message.sources && message.sources.length > 0 && (
-        <SourcesPanel sources={message.sources} citationNumbers={citationNumbers} onOpenArticle={setOpenUnitId} />
-      )}
+      <div className="min-w-0 flex-1 space-y-4">
+        {isStreaming && text === "" ? (
+          <div className="pt-1.5">
+            <ThinkingIndicator />
+          </div>
+        ) : (
+          <div className="prose prose-slate max-w-none leading-relaxed dark:prose-invert prose-headings:tracking-tight prose-strong:text-foreground">
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+              {linkCitations(text, citationNumbers)}
+            </ReactMarkdown>
+          </div>
+        )}
 
-      {openUnitId && (
-        <ArticleModal
-          key={openUnitId}
-          unitId={openUnitId}
-          number={citationNumbers.get(openUnitId)}
-          onClose={() => setOpenUnitId(null)}
-        />
-      )}
+        {message.status === "done" && <CopyButton text={message.content} />}
+
+        {message.sources && message.sources.length > 0 && (
+          <SourcesPanel sources={message.sources} citationNumbers={citationNumbers} onOpenArticle={setOpenUnitId} />
+        )}
+
+        {openUnitId && (
+          <ArticleModal
+            key={openUnitId}
+            unitId={openUnitId}
+            number={citationNumbers.get(openUnitId)}
+            onClose={() => setOpenUnitId(null)}
+          />
+        )}
+      </div>
     </div>
   );
 }

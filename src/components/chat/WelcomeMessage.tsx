@@ -1,10 +1,14 @@
-import { Sparkles } from "lucide-react";
+"use client";
+
+import { BookOpenCheck, GraduationCap, RefreshCcw } from "lucide-react";
+import { motion } from "motion/react";
+import Image from "next/image";
 import type { ReactNode } from "react";
 
 const SUGGESTED_QUESTIONS = [
-  { label: "Egresamiento", question: "¿Qué requisitos necesito para ser declarado egresado?" },
-  { label: "Titulación", question: "¿Cuál es la nota mínima para aprobar el trabajo de integración curricular?" },
-  { label: "Matrículas", question: "¿Qué pasa si repruebo por tercera vez la misma asignatura?" },
+  { icon: GraduationCap, label: "Egresamiento", question: "¿Qué requisitos necesito para ser declarado egresado?" },
+  { icon: BookOpenCheck, label: "Titulación", question: "¿Cuál es la nota mínima para aprobar el trabajo de integración curricular?" },
+  { icon: RefreshCcw, label: "Matrículas", question: "¿Qué pasa si repruebo por tercera vez la misma asignatura?" },
 ];
 
 type WelcomeMessageProps = {
@@ -16,38 +20,52 @@ type WelcomeMessageProps = {
 /** Pantalla inicial, mientras no hay mensajes. */
 export function WelcomeMessage({ onPickQuestion, children }: WelcomeMessageProps) {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-10">
-      <div className="flex w-full max-w-2xl flex-col items-center gap-6 text-center">
-        <div className="rounded-2xl border border-zinc-200 p-3 text-sky-700 shadow-sm dark:border-zinc-800 dark:text-sky-400">
-          <Sparkles size={22} />
+    <main className="relative flex flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-10">
+      {/* Halo suave detrás del escudo */}
+      <div className="pointer-events-none absolute top-1/4 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-brand/10 blur-3xl" />
+
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="relative flex w-full max-w-2xl flex-col items-center gap-7 text-center"
+      >
+        <div className="rounded-2xl bg-white p-2 shadow-md ring-1 ring-border">
+          <Image src="/logo-istae.jpg" alt="" width={56} height={58} className="object-contain" priority />
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-100">Hola 👋</h1>
-          <p className="text-zinc-600 dark:text-zinc-400">¿Qué quieres saber sobre la normativa del ISTAE?</p>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">¿Qué quieres saber?</h1>
+          <p className="text-muted-foreground">
+            Consulta la normativa del ISTAE y la normativa nacional de educación superior.
+            <br className="hidden sm:block" /> Cada respuesta indica los artículos en los que se basa.
+          </p>
         </div>
 
         <div className="w-full">{children}</div>
 
-        <div className="flex flex-wrap justify-center gap-2">
-          {SUGGESTED_QUESTIONS.map(({ label, question }) => (
+        <div className="grid w-full gap-3 sm:grid-cols-3">
+          {SUGGESTED_QUESTIONS.map(({ icon: Icon, label, question }) => (
             <button
               key={label}
               type="button"
               onClick={() => onPickQuestion(question)}
-              title={question}
-              className="rounded-full border border-zinc-200 px-4 py-1.5 text-sm text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
+              className="group flex flex-col gap-2 rounded-xl border bg-card p-4 text-left shadow-xs transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-md"
             >
-              {label}
+              <span className="flex items-center gap-2 text-sm font-medium text-foreground">
+                <Icon className="size-4 text-brand" />
+                {label}
+              </span>
+              <span className="text-xs leading-relaxed text-muted-foreground">{question}</span>
             </button>
           ))}
         </div>
 
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-muted-foreground">
           Las respuestas son orientativas y no reemplazan el criterio de la autoridad competente. Verifica siempre el
           artículo citado.
         </p>
-      </div>
+      </motion.div>
     </main>
   );
 }

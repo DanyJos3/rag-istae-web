@@ -3,6 +3,8 @@
 import { Layers, Lock } from "lucide-react";
 import useSWRImmutable from "swr/immutable";
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { fetchArchitectures } from "@/lib/api";
 
 type ArchitectureSelectProps = {
@@ -21,33 +23,42 @@ export function ArchitectureSelect({ value, onChange, locked }: ArchitectureSele
 
   if (locked) {
     return (
-      <span
-        title="La arquitectura se elige al empezar el chat. Para usar otra, abre un chat nuevo."
-        className="flex items-center gap-1.5 rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-800 dark:bg-sky-950 dark:text-sky-300"
-      >
-        <Lock size={12} />
-        {selected?.name ?? value}
-      </span>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-xs font-medium text-brand">
+            <Lock className="size-3" />
+            {selected?.name ?? value}
+          </span>
+        </TooltipTrigger>
+        <TooltipContent>La arquitectura se elige al empezar. Para usar otra, abre un chat nuevo.</TooltipContent>
+      </Tooltip>
     );
   }
 
   return (
-    <label className="flex items-center gap-1.5 rounded-full border border-zinc-200 px-3 py-1 text-xs text-zinc-700 dark:border-zinc-700 dark:text-zinc-300">
-      <Layers size={12} />
-      <span className="sr-only">Arquitectura</span>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        title={selected?.description}
-        className="bg-transparent font-medium outline-none"
-      >
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger size="sm" aria-label="Arquitectura" className="h-7 gap-1.5 rounded-full border-border px-3 text-xs shadow-none">
+        <Layers className="size-3.5 text-brand" />
+        {/* En el botón se muestra solo el nombre (las opciones también traen la descripción). */}
+        <SelectValue>{selected?.name}</SelectValue>
+      </SelectTrigger>
+      <SelectContent position="popper" align="start" className="w-80">
         {architectures.map((architecture) => (
-          <option key={architecture.id} value={architecture.id} disabled={!architecture.available}>
-            {architecture.name}
-            {!architecture.available && " · próximamente"}
-          </option>
+          <SelectItem key={architecture.id} value={architecture.id} disabled={!architecture.available} className="py-2">
+            <div className="flex flex-col gap-0.5">
+              <span className="flex items-center gap-2 font-medium">
+                {architecture.name}
+                {!architecture.available && (
+                  <span className="rounded-full bg-muted px-1.5 py-px text-[10px] font-normal text-muted-foreground">
+                    próximamente
+                  </span>
+                )}
+              </span>
+              <span className="text-xs whitespace-normal text-muted-foreground">{architecture.description}</span>
+            </div>
+          </SelectItem>
         ))}
-      </select>
-    </label>
+      </SelectContent>
+    </Select>
   );
 }

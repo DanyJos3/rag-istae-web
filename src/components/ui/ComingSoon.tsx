@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
 type ComingSoonProps = {
   children: ReactNode;
 };
@@ -10,16 +12,14 @@ type ComingSoonProps = {
  */
 export function ComingSoon({ children }: ComingSoonProps) {
   return (
-    <span className="group relative inline-flex">
-      <span aria-disabled="true" className="pointer-events-none opacity-50">
-        {children}
-      </span>
-      <span
-        role="tooltip"
-        className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 rounded-md bg-zinc-900 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100 dark:bg-zinc-100 dark:text-zinc-900"
-      >
-        Próximamente
-      </span>
-    </span>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        {/* El span recibe el mouse: un botón deshabilitado no dispara eventos. */}
+        <span tabIndex={0} aria-disabled="true" className="inline-flex cursor-not-allowed">
+          <span className="pointer-events-none opacity-50">{children}</span>
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>Próximamente</TooltipContent>
+    </Tooltip>
   );
 }

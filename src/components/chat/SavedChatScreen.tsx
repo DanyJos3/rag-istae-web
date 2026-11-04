@@ -23,8 +23,8 @@ export function SavedChatScreen({ chatId }: SavedChatScreenProps) {
     return (
       <AppShell>
         <main className="flex flex-1 flex-col items-center justify-center gap-3 px-4 text-center">
-          <p className="text-zinc-700 dark:text-zinc-300">No encontramos este chat en este navegador.</p>
-          <Link href="/" className="text-sm font-medium text-sky-700 hover:underline dark:text-sky-400">
+          <p className="text-foreground/80">No encontramos este chat en este navegador.</p>
+          <Link href="/" className="text-sm font-medium text-brand hover:underline">
             Empezar un chat nuevo
           </Link>
         </main>

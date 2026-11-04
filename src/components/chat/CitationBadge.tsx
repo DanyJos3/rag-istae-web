@@ -1,3 +1,5 @@
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
 type CitationBadgeProps = {
   number: number | undefined;
   /** false si el artículo citado no existe en la normativa (identificador inventado). */
@@ -5,27 +7,34 @@ type CitationBadgeProps = {
   onOpen: () => void;
 };
 
+const BADGE_CLASS =
+  "mx-0.5 inline-flex h-[1.15rem] min-w-[1.15rem] items-center justify-center rounded-full px-1 align-text-top text-[10.5px] font-semibold not-prose";
+
 /** Círculo numerado que reemplaza a [INT08-art12] dentro de la respuesta. */
 export function CitationBadge({ number, isKnown, onOpen }: CitationBadgeProps) {
   if (!isKnown) {
     return (
-      <span
-        title="Este artículo no se encontró en la normativa disponible"
-        className="mx-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-zinc-300 px-1 align-text-top text-[11px] font-semibold text-zinc-700 dark:bg-zinc-700 dark:text-zinc-200"
-      >
-        ?
-      </span>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className={`${BADGE_CLASS} bg-muted text-muted-foreground`}>?</span>
+        </TooltipTrigger>
+        <TooltipContent>Este artículo no se encontró en la normativa disponible.</TooltipContent>
+      </Tooltip>
     );
   }
 
   return (
-    <button
-      type="button"
-      onClick={onOpen}
-      title="Ver el artículo"
-      className="mx-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sky-600 px-1 align-text-top text-[11px] font-semibold text-white hover:bg-sky-700"
-    >
-      {number}
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          onClick={onOpen}
+          className={`${BADGE_CLASS} bg-brand text-brand-foreground transition-transform hover:scale-110`}
+        >
+          {number}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>Ver el artículo</TooltipContent>
+    </Tooltip>
   );
 }

@@ -6,6 +6,8 @@ import { useState } from "react";
 import useSWRImmutable from "swr/immutable";
 
 import { AppShell } from "@/components/layout/AppShell";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { fetchDocuments } from "@/lib/api";
 import type { DocumentSummary } from "@/lib/types";
 
@@ -39,46 +41,41 @@ export function DocumentsScreen() {
   return (
     <AppShell>
       <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-10">
           <header className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-medium text-zinc-500">Administración</p>
-              <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Documentos</h1>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                Normativa institucional y nacional con la que responde el asistente.
-              </p>
+            <div className="space-y-1">
+              <p className="text-xs font-semibold tracking-wider text-brand uppercase">Administración</p>
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground">Documentos</h1>
+              <p className="text-sm text-muted-foreground">Normativa institucional y nacional con la que responde el asistente.</p>
             </div>
-            <Link
-              href="/documentos/nuevo"
-              className="flex items-center gap-2 rounded-xl bg-sky-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-sky-800"
-            >
-              <Plus size={16} />
-              Agregar documento
-            </Link>
+            <Button asChild size="lg" className="gap-2 rounded-xl px-4 shadow-sm">
+              <Link href="/documentos/nuevo">
+                <Plus />
+                Agregar documento
+              </Link>
+            </Button>
           </header>
 
           {documents && <DocumentStats documents={documents} />}
 
           <div className="flex flex-wrap items-center gap-3">
-            <label className="flex min-w-60 flex-1 items-center gap-2 rounded-xl border border-zinc-200 px-3 py-2 focus-within:border-zinc-400 dark:border-zinc-700">
-              <Search size={16} className="text-zinc-400" />
-              <input
+            <div className="relative min-w-60 flex-1">
+              <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Buscar por nombre, código, emisor o área…"
-                className="w-full bg-transparent text-sm outline-none"
+                className="h-10 rounded-xl pl-9"
               />
-            </label>
-            <div className="flex rounded-xl border border-zinc-200 p-1 dark:border-zinc-700">
+            </div>
+            <div className="flex rounded-xl bg-muted p-1">
               {TYPE_FILTERS.map(({ value, label }) => (
                 <button
                   key={value}
                   type="button"
                   onClick={() => setTypeFilter(value)}
-                  className={`rounded-lg px-3 py-1.5 text-sm ${
-                    typeFilter === value
-                      ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                      : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400"
+                  className={`rounded-lg px-3.5 py-1.5 text-sm transition-colors ${
+                    typeFilter === value ? "bg-card font-medium text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {label}
@@ -87,8 +84,10 @@ export function DocumentsScreen() {
             </div>
           </div>
 
-          {isLoading && <p className="text-sm text-zinc-500">Cargando documentos… (si el servidor estaba inactivo puede tardar un minuto)</p>}
-          {error && <p className="text-sm text-red-700">No se pudo cargar la lista de documentos. Intente nuevamente.</p>}
+          {isLoading && (
+            <p className="text-sm text-muted-foreground">Cargando documentos… (si el servidor estaba inactivo puede tardar un minuto)</p>
+          )}
+          {error && <p className="text-sm text-destructive">No se pudo cargar la lista de documentos. Intente nuevamente.</p>}
           {documents && <DocumentsTable documents={visibleDocuments} />}
         </div>
       </main>

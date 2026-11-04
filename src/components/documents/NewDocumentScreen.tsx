@@ -71,16 +71,16 @@ export function NewDocumentScreen() {
     <AppShell>
       <main className="flex-1 overflow-y-auto">
         <div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-8">
-          <Link href="/documentos" className="flex w-fit items-center gap-1 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100">
+          <Link href="/documentos" className="flex w-fit items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground">
             <ArrowLeft size={16} /> Documentos
           </Link>
 
           <header>
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Agregar documento</h1>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">Sube una norma nueva para que el asistente pueda consultarla.</p>
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">Agregar documento</h1>
+            <p className="text-sm text-muted-foreground">Sube una norma nueva para que el asistente pueda consultarla.</p>
           </header>
 
-          <div className="flex gap-3 rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-900 dark:border-sky-900 dark:bg-sky-950/40 dark:text-sky-200">
+          <div className="flex gap-3 rounded-xl border border-brand/20 bg-brand-soft p-4 text-sm text-foreground [&_svg]:text-brand">
             <Info size={18} className="mt-0.5 shrink-0" />
             <p>
               <strong>Vista previa.</strong> La carga de documentos se habilitará en la siguiente etapa, junto con el
@@ -102,12 +102,12 @@ export function NewDocumentScreen() {
                     onClick={() => update({ docType, rank: DEFAULT_RANK[docType] })}
                     className={`rounded-xl border px-4 py-3 text-left text-sm ${
                       form.docType === docType
-                        ? "border-sky-600 bg-sky-50 text-sky-900 dark:bg-sky-950/40 dark:text-sky-200"
-                        : "border-zinc-200 text-zinc-700 hover:border-zinc-400 dark:border-zinc-700 dark:text-zinc-300"
+                        ? "border-brand bg-brand-soft text-foreground ring-2 ring-brand/15"
+                        : "border-border text-foreground/80 hover:border-brand/40"
                     }`}
                   >
                     <span className="block font-medium">{docType === "Interno" ? "Interno" : "Externo"}</span>
-                    <span className="text-xs text-zinc-500">
+                    <span className="text-xs text-muted-foreground">
                       {docType === "Interno" ? "Normativa propia del ISTAE" : "Leyes y reglamentos nacionales"}
                     </span>
                   </button>
@@ -117,7 +117,7 @@ export function NewDocumentScreen() {
 
             <div className="grid gap-4 sm:grid-cols-[8rem_1fr]">
               <Field label="Código" hint="Se asigna automáticamente.">
-                <input value={code} readOnly className={`${INPUT_CLASS} bg-zinc-50 font-mono dark:bg-zinc-900`} />
+                <input value={code} readOnly className={`${INPUT_CLASS} bg-muted font-mono`} />
               </Field>
               <Field label="Nombre oficial" required>
                 <input
@@ -196,12 +196,12 @@ export function NewDocumentScreen() {
 
           <WhatHappensOnSave />
 
-          <footer className="flex justify-end gap-2 border-t border-zinc-200 pt-4 dark:border-zinc-800">
-            <Link href="/documentos" className="rounded-xl px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800">
+          <footer className="flex justify-end gap-2 border-t pt-5">
+            <Link href="/documentos" className="rounded-xl px-4 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted">
               Cancelar
             </Link>
             <ComingSoon>
-              <button type="button" disabled className="rounded-xl bg-sky-700 px-4 py-2.5 text-sm font-medium text-white">
+              <button type="button" disabled className="rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-sm">
                 Guardar documento
               </button>
             </ComingSoon>
@@ -213,17 +213,17 @@ export function NewDocumentScreen() {
 }
 
 const INPUT_CLASS =
-  "w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100";
+  "w-full rounded-xl border border-input bg-card px-3 py-2 text-sm text-foreground outline-none transition-shadow focus:border-brand/50 focus:ring-4 focus:ring-brand/10";
 
 function FormSection({ step, title, optional = false, children }: { step: number; title: string; optional?: boolean; children: ReactNode }) {
   return (
-    <section className="space-y-4 rounded-2xl border border-zinc-200 p-5 dark:border-zinc-800">
-      <h2 className="flex items-center gap-2 font-semibold text-zinc-900 dark:text-zinc-100">
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-900 text-xs text-white dark:bg-zinc-100 dark:text-zinc-900">
+    <section className="space-y-5 rounded-2xl border bg-card p-6 shadow-xs">
+      <h2 className="flex items-center gap-2.5 font-semibold text-foreground">
+        <span className="flex size-6 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
           {step}
         </span>
         {title}
-        {optional && <span className="text-xs font-normal text-zinc-500">(opcional)</span>}
+        {optional && <span className="text-xs font-normal text-muted-foreground">(opcional)</span>}
       </h2>
       {children}
     </section>
@@ -233,12 +233,12 @@ function FormSection({ step, title, optional = false, children }: { step: number
 function Field({ label, hint, required = false, children }: { label: string; hint?: string; required?: boolean; children: ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+      <p className="text-sm font-medium text-foreground">
         {label}
-        {required && <span className="text-red-600"> *</span>}
+        {required && <span className="text-destructive"> *</span>}
       </p>
       {children}
-      {hint && <p className="text-xs text-zinc-500">{hint}</p>}
+      {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
     </div>
   );
 }
@@ -252,17 +252,17 @@ function WhatHappensOnSave() {
     ["Actualización del corpus", "La norma queda disponible en el chat y en esta lista. La versión anterior se conserva."],
   ];
   return (
-    <section className="rounded-2xl bg-zinc-50 p-5 dark:bg-zinc-900">
-      <h2 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100">Qué pasará al guardar</h2>
+    <section className="rounded-2xl border border-dashed bg-muted/40 p-6">
+      <h2 className="mb-4 text-sm font-semibold text-foreground">Qué pasará al guardar</h2>
       <ol className="space-y-3">
         {steps.map(([title, description], index) => (
           <li key={title} className="flex gap-3 text-sm">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-zinc-300 text-xs text-zinc-600 dark:border-zinc-700 dark:text-zinc-400">
+            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-brand-soft text-xs font-medium text-brand">
               {index + 1}
             </span>
             <div>
-              <p className="font-medium text-zinc-800 dark:text-zinc-200">{title}</p>
-              <p className="text-zinc-600 dark:text-zinc-400">{description}</p>
+              <p className="font-medium text-foreground">{title}</p>
+              <p className="text-muted-foreground">{description}</p>
             </div>
           </li>
         ))}

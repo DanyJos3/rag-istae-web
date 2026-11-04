@@ -26,7 +26,8 @@ evaluación (contexto largo o RAG) detrás del mismo endpoint.
 src/
   app/                    página, layout e ícono
   components/chat/        pantalla de chat: mensajes, citas, fuentes y artículo
-  components/layout/      barra lateral y logo del ISTAE
+  components/layout/      barra lateral, logo del ISTAE y modo claro/oscuro
+  components/ui/          componentes base de shadcn/ui
   hooks/useChat.ts        estado del chat
   lib/api.ts              llamadas al backend (POST /chat, GET /units/{id})
   lib/citations.ts        numeración de citas
@@ -36,7 +37,8 @@ src/
 ## Tecnologías
 
 - Next.js 16 (App Router) con TypeScript
-- Tailwind CSS 4 (con @tailwindcss/typography)
+- Tailwind CSS 4 (con @tailwindcss/typography); paleta institucional en `src/app/globals.css`
+- shadcn/ui sobre Radix (componentes en `src/components/ui/`), motion (animaciones), next-themes (modo oscuro)
 - react-markdown, eventsource-parser, SWR, lucide-react
 - Despliegue: Vercel (plan Hobby)
 

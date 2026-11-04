@@ -1,6 +1,8 @@
 "use client";
 
 import { ArrowUp } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import { useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 
 type ChatInputProps = {
@@ -36,7 +38,7 @@ export function ChatInput({ onSend, disabled, toolbar }: ChatInputProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl border border-zinc-200 bg-white p-3 text-left shadow-sm focus-within:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-900"
+      className="rounded-2xl border bg-card p-3 text-left shadow-lg shadow-primary/5 transition-shadow focus-within:border-brand/50 focus-within:ring-4 focus-within:ring-brand/10"
     >
       <textarea
         value={question}
@@ -45,18 +47,13 @@ export function ChatInput({ onSend, disabled, toolbar }: ChatInputProps) {
         placeholder="Escribe tu pregunta sobre la normativa…"
         rows={2}
         maxLength={2000}
-        className="max-h-40 w-full resize-none bg-transparent px-1 text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+        className="max-h-40 w-full resize-none bg-transparent px-1.5 pt-1 text-[15px] text-foreground outline-none placeholder:text-muted-foreground"
       />
       <div className="flex items-center justify-between gap-2">
         <div>{toolbar}</div>
-        <button
-          type="submit"
-          disabled={!canSend}
-          aria-label="Enviar pregunta"
-          className="rounded-full bg-zinc-900 p-2 text-white disabled:opacity-30 dark:bg-zinc-100 dark:text-zinc-900"
-        >
-          <ArrowUp size={18} />
-        </button>
+        <Button type="submit" disabled={!canSend} size="icon" aria-label="Enviar pregunta" className="rounded-full disabled:opacity-30">
+          <ArrowUp />
+        </Button>
       </div>
     </form>
   );

@@ -1,3 +1,5 @@
+import { CircleAlert } from "lucide-react";
+
 import type { ChatMessage } from "@/lib/types";
 
 import { AssistantMessage } from "./AssistantMessage";
@@ -10,7 +12,7 @@ type MessageBubbleProps = {
 export function MessageBubble({ message }: MessageBubbleProps) {
   if (message.role === "user") {
     return (
-      <div className="ml-auto max-w-[85%] rounded-2xl bg-zinc-100 px-4 py-3 whitespace-pre-wrap text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100">
+      <div className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-primary px-4 py-3 whitespace-pre-wrap text-primary-foreground shadow-sm">
         {message.content}
       </div>
     );
@@ -18,7 +20,8 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 
   if (message.status === "error") {
     return (
-      <div className="max-w-[85%] rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+      <div className="flex max-w-[85%] items-start gap-3 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+        <CircleAlert className="mt-0.5 size-4 shrink-0" />
         {message.content}
       </div>
     );

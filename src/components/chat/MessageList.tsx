@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
 
 import type { ChatMessage } from "@/lib/types";
@@ -19,9 +20,12 @@ export function MessageList({ messages }: MessageListProps) {
   }, [messages]);
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-6">
+    <div className="mx-auto flex max-w-3xl flex-col gap-8 px-4 py-8">
       {messages.map((message) => (
-        <MessageBubble key={message.id} message={message} />
+        // Cada mensaje aparece con un leve desplazamiento hacia arriba.
+        <motion.div key={message.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
+          <MessageBubble message={message} />
+        </motion.div>
       ))}
       <div ref={endRef} />
     </div>

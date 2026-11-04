@@ -1,4 +1,8 @@
+"use client";
+
 import { ChevronDown, CircleAlert, CircleCheck, Scale } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
 
 import type { SourceDocument, SourceUnit } from "@/lib/types";
 
@@ -10,33 +14,53 @@ type SourcesPanelProps = {
 
 /** Panel plegable al final de la respuesta: una tarjeta por artículo citado. */
 export function SourcesPanel({ sources, citationNumbers, onOpenArticle }: SourcesPanelProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const articleCount = sources.reduce((total, document) => total + document.units.length, 0);
 
   return (
-    <details className="group rounded-xl border border-sky-200 bg-sky-50/40 dark:border-sky-900 dark:bg-sky-950/20">
-      <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-sm font-semibold text-sky-800 dark:text-sky-300">
-        <Scale size={16} />
-        FUENTES LEGALES
-        <span className="rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium dark:bg-sky-900">
-          {articleCount} art.
+    <section className="overflow-hidden rounded-xl border bg-card shadow-xs">
+      <button
+        type="button"
+        onClick={() => setIsOpen((open) => !open)}
+        aria-expanded={isOpen}
+        className="flex w-full items-center gap-2.5 px-4 py-3 text-left transition-colors hover:bg-muted/50"
+      >
+        <span className="flex size-7 items-center justify-center rounded-lg bg-brand-soft text-brand">
+          <Scale className="size-4" />
         </span>
-        <ChevronDown size={16} className="ml-auto transition-transform group-open:rotate-180" />
-      </summary>
+        <span className="text-sm font-semibold text-foreground">Fuentes legales</span>
+        <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+          {articleCount} {articleCount === 1 ? "artículo" : "artículos"} · {sources.length}{" "}
+          {sources.length === 1 ? "norma" : "normas"}
+        </span>
+        <ChevronDown className={`ml-auto size-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
+      </button>
 
-      <ul className="space-y-3 px-4 pb-4">
-        {sources.flatMap((document) =>
-          document.units.map((unit) => (
-            <SourceCard
-              key={unit.unit_id}
-              documentName={document.document_name}
-              unit={unit}
-              number={citationNumbers.get(unit.unit_id)}
-              onOpen={() => onOpenArticle(unit.unit_id)}
-            />
-          )),
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <ul className="space-y-2 border-t bg-muted/30 p-3">
+              {sources.flatMap((document) =>
+                document.units.map((unit) => (
+                  <SourceCard
+                    key={unit.unit_id}
+                    documentName={document.document_name}
+                    unit={unit}
+                    number={citationNumbers.get(unit.unit_id)}
+                    onOpen={() => onOpenArticle(unit.unit_id)}
+                  />
+                )),
+              )}
+            </ul>
+          </motion.div>
         )}
-      </ul>
-    </details>
+      </AnimatePresence>
+    </section>
   );
 }
 
@@ -49,20 +73,20 @@ type SourceCardProps = {
 
 function SourceCard({ documentName, unit, number, onOpen }: SourceCardProps) {
   return (
-    <li className="rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-800 dark:bg-zinc-900">
-      <div className="flex items-start gap-2">
+    <li className="rounded-lg border bg-card p-3.5">
+      <div className="flex items-start gap-3">
         {number && (
-          <span className="mt-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-sky-600 text-[11px] font-semibold text-white">
+          <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-brand text-[10.5px] font-semibold text-brand-foreground">
             {number}
           </span>
         )}
-        <div className="flex-1 space-y-1">
-          <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{documentName}</p>
-          <p className="text-xs text-zinc-500">{unit.unit_id}</p>
-          {unit.quote && <p className="text-sm text-zinc-700 italic dark:text-zinc-300">«{unit.quote}»</p>}
+        <div className="min-w-0 flex-1 space-y-1.5">
+          <p className="text-sm leading-snug font-semibold text-foreground">{documentName}</p>
+          <p className="font-mono text-[11px] text-muted-foreground">{unit.unit_id}</p>
+          {unit.quote && <p className="font-serif text-sm leading-relaxed text-foreground/80 italic">«{unit.quote}»</p>}
           <div className="flex items-center justify-between pt-1">
             <VerificationLabel verified={unit.quote_verified} />
-            <button type="button" onClick={onOpen} className="text-xs font-medium text-sky-700 hover:underline dark:text-sky-400">
+            <button type="button" onClick={onOpen} className="text-xs font-medium text-brand hover:underline">
               Ver artículo completo
             </button>
           </div>
@@ -76,15 +100,15 @@ function SourceCard({ documentName, unit, number, onOpen }: SourceCardProps) {
 function VerificationLabel({ verified }: { verified: boolean | null }) {
   if (verified === true) {
     return (
-      <span className="flex items-center gap-1 text-xs text-emerald-700 dark:text-emerald-400">
-        <CircleCheck size={12} /> cita verificada
+      <span className="flex items-center gap-1 text-xs text-success">
+        <CircleCheck className="size-3.5" /> Cita verificada
       </span>
     );
   }
   if (verified === false) {
     return (
-      <span className="flex items-center gap-1 text-xs text-amber-700 dark:text-amber-400">
-        <CircleAlert size={12} /> revisar en la norma
+      <span className="flex items-center gap-1 text-xs text-warning">
+        <CircleAlert className="size-3.5" /> Revisar en la norma
       </span>
     );
   }

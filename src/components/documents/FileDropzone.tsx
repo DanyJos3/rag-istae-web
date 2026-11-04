@@ -39,13 +39,13 @@ export function FileDropzone({ file, onChange }: FileDropzoneProps) {
 
   if (file) {
     return (
-      <div className="flex items-center gap-3 rounded-xl border border-zinc-200 p-4 dark:border-zinc-700">
-        <FileUp size={20} className="text-sky-700 dark:text-sky-400" />
+      <div className="flex items-center gap-3 rounded-xl border bg-muted/40 p-4">
+        <FileUp size={20} className="text-brand" />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">{file.name}</p>
-          <p className="text-xs text-zinc-500">{(file.size / 1024 / 1024).toFixed(1)} MB</p>
+          <p className="truncate text-sm font-medium text-foreground">{file.name}</p>
+          <p className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(1)} MB</p>
         </div>
-        <button type="button" onClick={() => onChange(null)} aria-label="Quitar archivo" className="rounded-lg p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+        <button type="button" onClick={() => onChange(null)} aria-label="Quitar archivo" className="rounded-lg p-1 transition-colors hover:bg-muted">
           <X size={16} />
         </button>
       </div>
@@ -62,14 +62,14 @@ export function FileDropzone({ file, onChange }: FileDropzoneProps) {
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={`flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors ${
-          isDragging ? "border-sky-500 bg-sky-50 dark:bg-sky-950/30" : "border-zinc-300 hover:border-zinc-400 dark:border-zinc-700"
+          isDragging ? "border-brand bg-brand-soft" : "border-input hover:border-brand/50 hover:bg-muted/40"
         }`}
       >
-        <FileUp size={24} className="text-zinc-400" />
-        <span className="text-sm text-zinc-700 dark:text-zinc-300">
-          Arrastra el archivo aquí o <span className="font-medium text-sky-700 dark:text-sky-400">elígelo</span>
+        <FileUp size={24} className="text-brand" />
+        <span className="text-sm text-foreground/80">
+          Arrastra el archivo aquí o <span className="font-medium text-brand">elígelo</span>
         </span>
-        <span className="text-xs text-zinc-500">PDF o DOCX · máximo {MAX_SIZE_MB} MB</span>
+        <span className="text-xs text-muted-foreground">PDF o DOCX · máximo {MAX_SIZE_MB} MB</span>
         <input
           type="file"
           accept={ACCEPTED_EXTENSIONS.join(",")}
@@ -77,7 +77,7 @@ export function FileDropzone({ file, onChange }: FileDropzoneProps) {
           className="sr-only"
         />
       </label>
-      {error && <p className="mt-2 text-xs text-red-700">{error}</p>}
+      {error && <p className="mt-2 text-xs text-destructive">{error}</p>}
     </div>
   );
 }

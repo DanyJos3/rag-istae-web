@@ -4,17 +4,19 @@ import Image from "next/image";
 export function BrandLogo() {
   return (
     <div className="flex items-center gap-3">
-      <Image
-        src="/logo-istae.jpg"
-        alt="Escudo del Instituto Superior Tecnológico Alberto Enríquez"
-        width={44}
-        height={46}
-        className="rounded-md object-contain"
-        priority
-      />
+      <div className="rounded-xl bg-white p-1 shadow-sm ring-1 ring-border">
+        <Image
+          src="/logo-istae.jpg"
+          alt="Escudo del Instituto Superior Tecnológico Alberto Enríquez"
+          width={36}
+          height={37}
+          className="object-contain"
+          priority
+        />
+      </div>
       <div className="leading-tight">
-        <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Consulta normativa</p>
-        <p className="text-xs text-zinc-500">ISTAE · Alberto Enríquez</p>
+        <p className="text-sm font-semibold tracking-tight text-foreground">Consulta normativa</p>
+        <p className="text-xs text-muted-foreground">ISTAE · Alberto Enríquez</p>
       </div>
     </div>
   );
