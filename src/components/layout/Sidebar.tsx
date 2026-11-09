@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
@@ -12,7 +12,7 @@ import { BrandLogo } from "./BrandLogo";
 import { NewChatButton } from "./NewChatButton";
 import { ThemeToggle } from "./ThemeToggle";
 
-/** Barra lateral (solo en pantallas medianas o grandes): Administración arriba y Chat abajo. */
+/** Barra lateral (solo en pantallas medianas o grandes). */
 export function Sidebar() {
   const pathname = usePathname();
   const recentChats = useRecentChats();
@@ -20,12 +20,6 @@ export function Sidebar() {
   return (
     <aside className="hidden w-72 shrink-0 flex-col gap-6 border-r border-sidebar-border bg-sidebar px-4 py-5 md:flex">
       <BrandLogo />
-
-      <SidebarSection title="Administración">
-        <SidebarLink href="/documentos" isActive={pathname.startsWith("/documentos")} icon={<FileText />}>
-          Documentos
-        </SidebarLink>
-      </SidebarSection>
 
       <SidebarSection title="Chat" className="min-h-0 flex-1">
         <NewChatButton />

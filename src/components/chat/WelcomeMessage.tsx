@@ -61,6 +61,10 @@ export function WelcomeMessage({ onPickQuestion, children }: WelcomeMessageProps
           ))}
         </div>
 
+        <p className="text-sm text-foreground/80">
+          Cada conversación trata un solo tema. Para consultar otro tema, inicie una conversación nueva.
+        </p>
+
         <p className="text-xs text-muted-foreground">
           Las respuestas son orientativas y no reemplazan el criterio de la autoridad competente. Verifica siempre el
           artículo citado.

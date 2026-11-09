@@ -1,10 +1,6 @@
 "use client";
 
-import { FileText } from "lucide-react";
-import Link from "next/link";
 import type { ReactNode } from "react";
-
-import { Button } from "@/components/ui/button";
 
 import { BrandLogo } from "./BrandLogo";
 import { NewChatButton } from "./NewChatButton";
@@ -22,11 +18,6 @@ export function AppShell({ children }: { children: ReactNode }) {
         <header className="flex items-center justify-between border-b px-4 py-3 md:hidden">
           <BrandLogo />
           <div className="flex items-center gap-1">
-            <Button asChild variant="ghost" size="icon-sm">
-              <Link href="/documentos" aria-label="Documentos">
-                <FileText />
-              </Link>
-            </Button>
             <NewChatButton compact />
             <ThemeToggle />
           </div>

@@ -54,7 +54,7 @@ export async function streamChat({ question, history, architecture, onDelta, onA
   }
 }
 
-/** Trae el texto completo de un artículo citado (se usa al abrir la ventana del artículo). */
+/** Respaldo para chats anteriores cuyas fuentes no traen el texto del artículo. */
 export async function fetchUnit(unitId: string): Promise<UnitDetail> {
   const response = await fetch(`${API_URL}/units/${encodeURIComponent(unitId)}`);
   if (!response.ok) throw new Error("No se pudo cargar el artículo.");

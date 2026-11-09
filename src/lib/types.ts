@@ -14,6 +14,14 @@ export type SourceUnit = {
   quote: string | null;
   /** true: la cita aparece en la norma · false: no aparece · null: sin cita textual */
   quote_verified: boolean | null;
+  // B/C: el artículo tal como se envió al modelo (viene en el evento "answer").
+  label?: string;
+  title?: string;
+  text?: string;
+  /** true: se envió un fragmento del artículo ("[…]"). */
+  partial?: boolean;
+  /** C: "hierarchy" = agregado por jerarquía normativa. */
+  origin?: "base" | "hierarchy";
 };
 
 /** Citas agrupadas por norma, con el nombre oficial del catálogo. */
@@ -57,7 +65,7 @@ export type ArchitectureOption = {
 };
 
 /** Arquitectura con la que empieza cada chat nuevo. */
-export const DEFAULT_ARCHITECTURE = "A";
+export const DEFAULT_ARCHITECTURE = "C";
 
 /** GET /documents: una norma con la que trabaja el sistema. */
 export type DocumentSummary = {

@@ -17,8 +17,8 @@ Aplicada (UIDE), Grupo 3.
 Pendiente: inicio de sesión e historial de chats por usuario.
 
 La interfaz no contiene lógica de recuperación ni de generación: consume la API
-del backend (`rag-istae-api`), que expone la arquitectura elegida en la
-evaluación (contexto largo o RAG) detrás del mismo endpoint.
+del backend (`rag-istae-api`), que responde con las arquitecturas RAG B (híbrido)
+y C (con jerarquía normativa). Cada conversación trata un solo tema.
 
 ## Estructura
 
@@ -29,7 +29,7 @@ src/
   components/layout/      barra lateral, logo del ISTAE y modo claro/oscuro
   components/ui/          componentes base de shadcn/ui
   hooks/useChat.ts        estado del chat
-  lib/api.ts              llamadas al backend (POST /chat, GET /units/{id})
+  lib/api.ts              llamadas al backend (POST /chat, GET /architectures)
   lib/citations.ts        numeración de citas
   lib/types.ts            tipos del contrato con el backend
 ```

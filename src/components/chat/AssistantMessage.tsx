@@ -27,6 +27,13 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
   // Artículos que existen en la normativa (solo se sabe cuando llega la respuesta final).
   const knownUnitIds = new Set(message.sources?.flatMap((document) => document.units.map((unit) => unit.unit_id)));
 
+  const sourceFor = (unitId: string) =>
+    message.sources
+      ?.flatMap((document) =>
+        document.units.map((unit) => ({ ...unit, document_id: document.document_id, document_name: document.document_name })),
+      )
+      .find((unit) => unit.unit_id === unitId);
+
   // Los enlaces #cita-… se muestran como círculos numerados; el resto, como enlaces normales.
   const markdownComponents: Components = {
     a: ({ href, children }) => {
@@ -78,6 +85,7 @@ export function AssistantMessage({ message }: AssistantMessageProps) {
           <ArticleModal
             key={openUnitId}
             unitId={openUnitId}
+            source={sourceFor(openUnitId)}
             number={citationNumbers.get(openUnitId)}
             onClose={() => setOpenUnitId(null)}
           />
