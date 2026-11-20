@@ -33,7 +33,9 @@ export async function streamChat({ question, history, architecture, onDelta, onA
   });
 
   if (!response.ok || !response.body) {
-    onError({ message: "No se pudo enviar la pregunta. Intente nuevamente.", status: response.status });
+    // 429: la API explica el límite alcanzado (por minuto o por día).
+    const detail = response.status === 429 ? (await response.json().catch(() => null))?.detail : null;
+    onError({ message: detail ?? "No se pudo enviar la pregunta. Intente nuevamente.", status: response.status });
     return;
   }
 

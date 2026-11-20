@@ -53,8 +53,13 @@ npm run dev
 
 Abra http://localhost:3000.
 
-Variable de entorno: `NEXT_PUBLIC_API_URL`, la URL del backend (por defecto
-http://localhost:8000). Ver `.env.example`.
+Variables de entorno (ver `.env.example`):
+
+- `NEXT_PUBLIC_API_URL`: la URL del backend (por defecto http://localhost:8000).
+- `ACCESS_PASSWORD`: contraseña compartida para entrar a la web. El navegador la
+  pide al abrir el sitio (el usuario puede ser cualquiera). Es obligatoria en
+  producción: sin ella el sitio responde 503. En `npm run dev` es opcional.
+  La revisa `src/proxy.ts`.
 
 ## Repositorios relacionados
 
