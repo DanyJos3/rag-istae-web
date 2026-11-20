@@ -1,30 +1,29 @@
 import { NextResponse, type NextRequest } from "next/server";
 
+import { ACCESS_COOKIE, accessToken } from "@/lib/acceso";
+
 /**
- * Acceso con una contraseña compartida (autenticación básica del navegador).
+ * Acceso con una contraseña compartida (variable ACCESS_PASSWORD, definida en Vercel).
  *
- * La clave se define en la variable ACCESS_PASSWORD (en Vercel, no en el código).
- * El usuario puede ser cualquiera; solo se revisa la contraseña. En desarrollo
- * (`npm run dev`) sin clave definida la web queda abierta; en producción sin
- * clave se bloquea, para no publicarla abierta por olvido.
+ * Sin la cookie de acceso válida, cualquier página lleva a /acceso, donde se ingresa
+ * la contraseña (la revisa src/app/api/acceso/route.ts). En desarrollo (`npm run dev`)
+ * sin clave definida la web queda abierta; en producción sin clave se bloquea, para
+ * no publicarla abierta por olvido.
  */
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const password = process.env.ACCESS_PASSWORD;
   if (!password) {
     if (process.env.NODE_ENV !== "production") return NextResponse.next();
     return new NextResponse("Falta configurar ACCESS_PASSWORD.", { status: 503 });
   }
 
-  const [scheme, encoded] = (request.headers.get("authorization") ?? "").split(" ");
-  if (scheme === "Basic" && encoded) {
-    const credentials = atob(encoded);
-    if (credentials.slice(credentials.indexOf(":") + 1) === password) return NextResponse.next();
-  }
+  const { pathname, search } = request.nextUrl;
+  if (pathname === "/acceso" || pathname === "/api/acceso") return NextResponse.next();
+  if (request.cookies.get(ACCESS_COOKIE)?.value === (await accessToken(password))) return NextResponse.next();
 
-  return new NextResponse("Acceso restringido.", {
-    status: 401,
-    headers: { "WWW-Authenticate": 'Basic realm="Consulta normativa ISTAE", charset="UTF-8"' },
-  });
+  const login = new URL("/acceso", request.url);
+  login.searchParams.set("next", pathname + search);
+  return NextResponse.redirect(login);
 }
 
 export const config = {

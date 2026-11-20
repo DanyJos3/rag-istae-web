@@ -56,10 +56,11 @@ Abra http://localhost:3000.
 Variables de entorno (ver `.env.example`):
 
 - `NEXT_PUBLIC_API_URL`: la URL del backend (por defecto http://localhost:8000).
-- `ACCESS_PASSWORD`: contraseña compartida para entrar a la web. El navegador la
-  pide al abrir el sitio (el usuario puede ser cualquiera). Es obligatoria en
-  producción: sin ella el sitio responde 503. En `npm run dev` es opcional.
-  La revisa `src/proxy.ts`.
+- `ACCESS_PASSWORD`: contraseña compartida para entrar a la web. Sin la cookie de
+  acceso, cualquier página lleva a `/acceso`, donde se ingresa la clave; el navegador
+  la recuerda 7 días. Es obligatoria en producción: sin ella el sitio responde 503.
+  En `npm run dev` es opcional. Archivos: `src/proxy.ts`, `src/app/acceso` y
+  `src/app/api/acceso`.
 
 ## Repositorios relacionados
 
